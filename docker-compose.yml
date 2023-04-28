@@ -1,0 +1,62 @@
+version: '3.9'
+
+services:
+
+  alpha:
+    image: mysql/mysql-server:8.0
+    container_name: alpha
+    hostname: alpha
+    ports:
+      - '3306:3306'
+    restart: unless-stopped
+    command: [ "mysqld", "--loose-group-replication-local-address=alpha:6606" ]
+    env_file: .env
+    volumes:
+      - alpha_volume:/var/lib/mysql
+      - ./conf.d/my.cnf:/etc/mysql/my.cnf
+      - ./initdb.d:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: "mysqladmin ping -u root -p$${MYSQL_ROOT_PASSWORD}"
+      interval: 2s
+      retries: 20
+
+  beta:
+    image: mysql/mysql-server:8.0
+    container_name: beta
+    hostname: beta
+    ports:
+      - '3307:3306'
+    restart: unless-stopped
+    command: [ "mysqld", "--loose-group-replication-local-address=beta:6606" ]
+    env_file: .env
+    volumes:
+      - beta_volume:/var/lib/mysql
+      - ./conf.d/my.cnf:/etc/mysql/my.cnf
+      - ./initdb.d:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: "mysqladmin ping -u root -p$${MYSQL_ROOT_PASSWORD}"
+      interval: 2s
+      retries: 20
+
+  gamma:
+    image: mysql/mysql-server:8.0
+    container_name: gamma
+    hostname: gamma
+    ports:
+      - '3308:3306'
+    restart: unless-stopped
+    command: [ "mysqld", "--loose-group-replication-local-address=gamma:6606" ]
+    env_file: .env
+    volumes:
+      - gamma_volume:/var/lib/mysql
+      - ./conf.d/my.cnf:/etc/mysql/my.cnf
+      - ./initdb.d:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: "mysqladmin ping -u root -p$${MYSQL_ROOT_PASSWORD}"
+      interval: 2s
+      retries: 20
+
+volumes:
+  alpha_volume: { }
+  beta_volume: { }
+  gamma_volume: { }
