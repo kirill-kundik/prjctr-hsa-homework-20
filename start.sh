@@ -27,14 +27,14 @@ do
   fi
 done
 
-echo "Setting container roles (master/slave) and configurations."
+echo "Setting container roles (primary/replicas) and configurations."
 
 sleep 10
 
-docker-compose exec -it alpha mysql -uroot -pmypass mydb -e "CALL set_as_master;" &> /dev/null
+docker-compose exec -it primary mysql -uroot -pmypass mydb -e "CALL set_as_primary;" &> /dev/null
 
-docker-compose exec -it beta mysql -uroot -pmypass mydb -e "CALL set_as_slave;" &> /dev/null
+docker-compose exec -it replica_1 mysql -uroot -pmypass mydb -e "CALL set_as_replica;" &> /dev/null
 
-docker-compose exec -it gamma mysql -uroot -pmypass mydb -e "CALL set_as_slave;" &> /dev/null
+docker-compose exec -it replica_2 mysql -uroot -pmypass mydb -e "CALL set_as_replica;" &> /dev/null
 
 echo "MySQL group replication have successfully started."

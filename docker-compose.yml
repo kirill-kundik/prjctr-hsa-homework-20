@@ -2,17 +2,17 @@ version: '3.9'
 
 services:
 
-  alpha:
+  primary:
     image: mysql/mysql-server:8.0
-    container_name: alpha
-    hostname: alpha
+    container_name: primary
+    hostname: primary
     ports:
       - '3306:3306'
     restart: unless-stopped
-    command: [ "mysqld", "--loose-group-replication-local-address=alpha:6606" ]
+    command: [ "mysqld", "--loose-group-replication-local-address=primary:6606" ]
     env_file: .env
     volumes:
-      - alpha_volume:/var/lib/mysql
+      - primary_volume:/var/lib/mysql
       - ./conf.d/my.cnf:/etc/mysql/my.cnf
       - ./initdb.d:/docker-entrypoint-initdb.d
     healthcheck:
@@ -20,17 +20,17 @@ services:
       interval: 2s
       retries: 20
 
-  beta:
+  replica_1:
     image: mysql/mysql-server:8.0
-    container_name: beta
-    hostname: beta
+    container_name: replica_1
+    hostname: replica_1
     ports:
       - '3307:3306'
     restart: unless-stopped
-    command: [ "mysqld", "--loose-group-replication-local-address=beta:6606" ]
+    command: [ "mysqld", "--loose-group-replication-local-address=replica_1:6606" ]
     env_file: .env
     volumes:
-      - beta_volume:/var/lib/mysql
+      - replica_1_volume:/var/lib/mysql
       - ./conf.d/my.cnf:/etc/mysql/my.cnf
       - ./initdb.d:/docker-entrypoint-initdb.d
     healthcheck:
@@ -38,17 +38,17 @@ services:
       interval: 2s
       retries: 20
 
-  gamma:
+  replica_2:
     image: mysql/mysql-server:8.0
-    container_name: gamma
-    hostname: gamma
+    container_name: replica_2
+    hostname: replica_2
     ports:
       - '3308:3306'
     restart: unless-stopped
-    command: [ "mysqld", "--loose-group-replication-local-address=gamma:6606" ]
+    command: [ "mysqld", "--loose-group-replication-local-address=replica_2:6606" ]
     env_file: .env
     volumes:
-      - gamma_volume:/var/lib/mysql
+      - replica_2_volume:/var/lib/mysql
       - ./conf.d/my.cnf:/etc/mysql/my.cnf
       - ./initdb.d:/docker-entrypoint-initdb.d
     healthcheck:
@@ -57,6 +57,6 @@ services:
       retries: 20
 
 volumes:
-  alpha_volume: { }
-  beta_volume: { }
-  gamma_volume: { }
+  primary_volume: { }
+  replica_1_volume: { }
+  replica_2_volume: { }

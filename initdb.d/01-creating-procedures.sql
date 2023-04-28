@@ -1,7 +1,7 @@
-DROP PROCEDURE IF EXISTS set_as_master;
+DROP PROCEDURE IF EXISTS set_as_primary;
 
 DELIMITER $$
-CREATE PROCEDURE set_as_master ()
+CREATE PROCEDURE set_as_primary ()
 BEGIN
   SET @@GLOBAL.group_replication_bootstrap_group=1;
   create user IF NOT EXISTS 'repl'@'%';
@@ -14,10 +14,10 @@ END $$
 DELIMITER ;
 
 
-DROP PROCEDURE IF EXISTS set_as_slave;
+DROP PROCEDURE IF EXISTS set_as_replica;
 
 DELIMITER $$
-CREATE PROCEDURE set_as_slave ()
+CREATE PROCEDURE set_as_replica ()
 BEGIN
   change master to master_user='repl' for channel 'group_replication_recovery';
   START GROUP_REPLICATION;
